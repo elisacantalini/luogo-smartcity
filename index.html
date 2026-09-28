@@ -422,37 +422,143 @@
   .ev-empty { padding: 16px; color: var(--ink-faint); font-size: 13px; }
 </style>
 
+<style>
+  /* ---------- lingua: 한국어 / Italiano ---------- */
+  :root:not([data-lang="ko"]) [data-l="ko"],
+  :root[data-lang="ko"] [data-l="it"] { display: none !important; }
+
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  .lang-switch {
+    display: inline-flex;
+    border: 1px solid var(--line-strong);
+    border-radius: 999px;
+    padding: 2px;
+    background: var(--surface);
+  }
+
+  .lang-switch button {
+    font: 500 13px var(--sans);
+    color: var(--ink-soft);
+    background: transparent;
+    border: 0;
+    border-radius: 999px;
+    padding: 5px 14px;
+    cursor: pointer;
+  }
+
+  .lang-switch button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+  .lang-switch button:not([aria-pressed="true"]):hover { color: var(--ink); background: var(--accent-soft); }
+</style>
+
+<script>
+  // Lingua scelta prima del primo disegno: #ko / #it nel link → scelta salvata → lingua del browser.
+  (function () {
+    var h = (location.hash || '').replace('#', '');
+    var saved = null;
+    try { saved = localStorage.getItem('luogo-lang'); } catch (e) {}
+    var lang = (h === 'ko' || h === 'it') ? h : (saved === 'ko' || saved === 'it') ? saved
+             : ((navigator.language || '').toLowerCase().indexOf('it') === 0 ? 'it' : 'ko');
+    document.documentElement.setAttribute('data-lang', lang);
+    document.documentElement.lang = lang;
+  })();
+
+  // Messaggi scritti dallo script (caricamento, errori, salvataggio) nelle due lingue.
+  window.I18N = {
+    ko: {
+      title: '안서동 300 지표',
+      loading: '서버에서 불러오는 중…',
+      oldBrowser: '이 브라우저는 너무 오래되어 테이블을 읽을 수 없습니다. 최신 Chrome, Safari, Edge 또는 삼성 인터넷으로 여세요.',
+      timeout: '12초 동안 응답이 없습니다. cdn.jsdelivr.net 또는 supabase.co로의 연결이 막혔을 가능성이 큽니다(학교 Wi-Fi, VPN, 광고 차단). 모바일 데이터로 바꾸거나 광고 차단을 끄고 새로고침하세요.',
+      noLib: 'Supabase 라이브러리를 내려받지 못했습니다(cdn.jsdelivr.net·esm.sh 차단). 모바일 데이터로 바꾸거나 광고 차단을 끄고 새로고침하세요.',
+      wrongKey: 'config.js의 키가 잘못되었습니다. publishable 키(sb_publishable_…)만 써야 하며 secret 키나 옛 anon 키(eyJ…)는 안 됩니다.',
+      noConfig: 'Supabase 프로젝트가 아직 연결되지 않았습니다. config.js를 채우세요.',
+      readErr: '읽기 오류 — {msg}',
+      empty: '테이블이 비어 있습니다. 서버에 저장된 행이 없습니다.',
+      saving: '저장 중…',
+      saved: '{id}번 행으로 저장됨 · {when}',
+      e42501: 'RLS가 거부했습니다. 정책이 없습니다(supabase/evidence.sql 참고).',
+      eEmpty: '서버가 빈 칸이나 잘못된 값을 거부했습니다.',
+      eNum: '숫자가 아닌 값입니다. 「값」에는 숫자만 넣으세요.',
+      eTable: 'evidence 테이블이 없습니다. supabase/evidence.sql을 실행하세요.',
+      eKey: '키가 유효하지 않습니다.',
+      eNet: '브라우저가 supabase.co에 연결하지 못합니다(학교 네트워크, VPN, 광고 차단). 모바일 데이터로 바꾼 뒤 새로고침하세요.'
+    },
+    it: {
+      title: 'Indicatori Anseo-dong 300',
+      loading: 'Caricamento dal server…',
+      oldBrowser: 'Questo browser è troppo vecchio per leggere la tabella: aprire la pagina con Chrome, Safari, Edge o Samsung Internet aggiornati.',
+      timeout: 'Nessuna risposta dopo 12 secondi. Probabile blocco di rete (Wi-Fi dell\'università, VPN o blocco pubblicità) verso cdn.jsdelivr.net o supabase.co: provare con i dati mobili o disattivare il blocco pubblicità, poi ricaricare.',
+      noLib: 'Impossibile scaricare la libreria di Supabase (cdn.jsdelivr.net ed esm.sh bloccati). Provare con i dati mobili o senza blocco pubblicità, poi ricaricare.',
+      wrongKey: 'Chiave sbagliata in config.js: serve la chiave publishable (sb_publishable_…), mai la secret né la vecchia anon (eyJ…).',
+      noConfig: 'Progetto Supabase non ancora collegato: compilare config.js.',
+      readErr: 'Errore di lettura — {msg}',
+      empty: 'La tabella è vuota: nessuna riga salvata sul server.',
+      saving: 'Salvataggio…',
+      saved: 'Salvata come riga id {id} · {when}',
+      e42501: 'Rifiutato da RLS: manca la policy (vedi supabase/evidence.sql).',
+      eEmpty: 'Il server ha rifiutato un campo vuoto o non valido.',
+      eNum: 'Valore non numerico: in «valore» vanno solo cifre.',
+      eTable: 'Tabella evidence non trovata: eseguire supabase/evidence.sql.',
+      eKey: 'Chiave non valida.',
+      eNet: 'Il browser non raggiunge supabase.co (rete dell\'università, VPN o blocco pubblicità). Provare con i dati mobili, poi ricaricare.'
+    }
+  };
+
+  window.lang = function () { return document.documentElement.getAttribute('data-lang') === 'it' ? 'it' : 'ko'; };
+  window.locale = function () { return lang() === 'it' ? 'it-IT' : 'ko-KR'; };
+
+  // Un messaggio si scrive con la sua chiave: così al cambio di lingua si riscrive da solo.
+  window.setMsg = function (el, key, params) {
+    el.dataset.msg = key;
+    el.dataset.params = JSON.stringify(params || {});
+    var s = (I18N[lang()][key] || key);
+    var p = params || {};
+    el.textContent = s.replace(/\{(\w+)\}/g, function (_, k) {
+      var v = p[k];
+      if (v && typeof v === 'object') return v.msg ? (I18N[lang()][v.msg] || '') : (v.raw || '');
+      return v == null ? '' : v;
+    });
+  };
+</script>
+
 <div class="wrap">
 
   <header class="masthead">
-    <p class="eyebrow">Pianificazione della Smart City · Capstone Design · Settimana 4</p>
-    <h1>Campus di Cheonan, Università Sangmyung</h1>
+    <div class="topbar">
+      <p class="eyebrow"><span data-l="ko">스마트시티계획 · 캡스톤디자인 · 4주차</span><span data-l="it">Pianificazione della Smart City · Capstone Design · Settimana 4</span></p>
+      <div class="lang-switch" role="group" aria-label="Lingua / 언어">
+        <button type="button" id="lang-ko" data-set-lang="ko" aria-pressed="false">한국어</button>
+        <button type="button" id="lang-it" data-set-lang="it" aria-pressed="false">Italiano</button>
+      </div>
+    </div>
+    <h1><span data-l="ko">상명대학교 천안캠퍼스</span><span data-l="it">Campus di Cheonan, Università Sangmyung</span></h1>
     <p class="ko">충청남도 천안시 동남구 안서동 300 · Sangmyungdae-gil 31, Anseo-dong, Dongnam-gu</p>
 
     <dl class="facts">
       <div>
-        <dt>Centro del sito</dt>
-        <dd>36,83300 N · 127,17900 E<small>WGS84 · OSM way 231288273</small></dd>
+        <dt><span data-l="ko">대상지 중심</span><span data-l="it">Centro del sito</span></dt>
+        <dd><span data-l="ko">36.83300 N · 127.17900 E</span><span data-l="it">36,83300 N · 127,17900 E</span><small>WGS84 · OSM way 231288273</small></dd>
       </div>
       <div>
-        <dt>Estensione</dt>
-        <dd>490 × 550 m<small>N-S × E-O</small></dd>
+        <dt><span data-l="ko">범위</span><span data-l="it">Estensione</span></dt>
+        <dd>490 × 550 m<small><span data-l="ko">남북 × 동서</span><span data-l="it">N-S × E-O</span></small></dd>
       </div>
       <div>
-        <dt>Superficie catastale</dt>
-        <dd>192.602 ㎡<small>지목 학교용지</small></dd>
+        <dt><span data-l="ko">지적 면적</span><span data-l="it">Superficie catastale</span></dt>
+        <dd><span data-l="ko">192,602 ㎡</span><span data-l="it">192.602 ㎡</span><small>지목 학교용지</small></dd>
       </div>
       <div>
-        <dt>Zona d'uso prevalente</dt>
-        <dd>Verde naturale<small>자연녹지지역 · n. 16</small></dd>
+        <dt><span data-l="ko">주 용도지역</span><span data-l="it">Zona d'uso prevalente</span></dt>
+        <dd><span data-l="ko">자연녹지지역</span><span data-l="it">Verde naturale</span><small><span data-l="ko">조례 제61조 제1항 제16호</span><span data-l="it">자연녹지지역 · n. 16</span></small></dd>
       </div>
       <div>
-        <dt>Ambito di analisi</dt>
-        <dd>5 anelli da 1 km<small>34 circoscrizioni · 1.914 u. cens.</small></dd>
+        <dt><span data-l="ko">분석 범위</span><span data-l="it">Ambito di analisi</span></dt>
+        <dd><span data-l="ko">1 km 동심원 5개</span><span data-l="it">5 anelli da 1 km</span><small><span data-l="ko">읍면동 34개 · 집계구 1,914개</span><span data-l="it">34 circoscrizioni · 1.914 u. cens.</span></small></dd>
       </div>
       <div>
-        <dt>Centro di confronto</dt>
-        <dd>6,12 km<small>Municipio di Cheonan</small></dd>
+        <dt><span data-l="ko">비교 중심</span><span data-l="it">Centro di confronto</span></dt>
+        <dd><span data-l="ko">6.12 km</span><span data-l="it">6,12 km</span><small><span data-l="ko">천안시청</span><span data-l="it">Municipio di Cheonan</span></small></dd>
       </div>
     </dl>
   </header>
@@ -461,43 +567,43 @@
 
   <section class="sec">
     <header>
-      <h2>Schermata del team</h2>
-      <p>Un riquadro per indicatore. Si pubblica solo ciò che ha valore, unità, fonte e data di consultazione: i riquadri non consultati restano vuoti e dichiarati.</p>
+      <h2><span data-l="ko">팀 화면</span><span data-l="it">Schermata del team</span></h2>
+      <p><span data-l="ko">지표마다 칸 하나. 값·단위·출처·조회일이 모두 있는 것만 게시하고, 조회하지 않은 칸은 빈칸임을 밝혀 둔다.</span><span data-l="it">Un riquadro per indicatore. Si pubblica solo ciò che ha valore, unità, fonte e data di consultazione: i riquadri non consultati restano vuoti e dichiarati.</span></p>
     </header>
 
     <div class="tiles">
 
       <article class="tile pending">
-        <span class="week">Settimana 1</span>
-        <h3>Temperatura di superficie<span>지표면 온도</span></h3>
+        <span class="week"><span data-l="ko">1주차</span><span data-l="it">Settimana 1</span></span>
+        <h3 data-l="ko">지표면 온도</h3><h3 data-l="it">Temperatura di superficie<span>지표면 온도</span></h3>
         <div class="spacer"></div>
-        <p>Dati della Settimana 1 non ancora riportati in questa schermata.</p>
-        <span class="badge wait">In attesa di consultazione</span>
+        <p><span data-l="ko">1주차 데이터가 아직 이 화면에 옮겨지지 않았다.</span><span data-l="it">Dati della Settimana 1 non ancora riportati in questa schermata.</span></p>
+        <span class="badge wait"><span data-l="ko">조회 대기</span><span data-l="it">In attesa di consultazione</span></span>
       </article>
 
       <article class="tile pending">
-        <span class="week">Settimana 2</span>
-        <h3>Densità abitativa su griglia<span>격자 인구밀도</span></h3>
+        <span class="week"><span data-l="ko">2주차</span><span data-l="it">Settimana 2</span></span>
+        <h3 data-l="ko">격자 인구밀도</h3><h3 data-l="it">Densità abitativa su griglia<span>격자 인구밀도</span></h3>
         <div class="spacer"></div>
-        <p>Dati della Settimana 2 non ancora riportati in questa schermata.</p>
-        <span class="badge wait">In attesa di consultazione</span>
+        <p><span data-l="ko">2주차 데이터가 아직 이 화면에 옮겨지지 않았다.</span><span data-l="it">Dati della Settimana 2 non ancora riportati in questa schermata.</span></p>
+        <span class="badge wait"><span data-l="ko">조회 대기</span><span data-l="it">In attesa di consultazione</span></span>
       </article>
 
       <article class="tile filled">
-        <span class="week">Settimana 3</span>
-        <h3>Indice di edificabilità (FAR)<span>용적률</span></h3>
-        <div class="value"><b>80</b><i>← valore</i></div>
-        <p class="unit">percento, massimo ← unità</p>
+        <span class="week"><span data-l="ko">3주차</span><span data-l="it">Settimana 3</span></span>
+        <h3 data-l="ko">용적률 (FAR)</h3><h3 data-l="it">Indice di edificabilità (FAR)<span>용적률</span></h3>
+        <div class="value"><b>80</b><i><span data-l="ko">← 값</span><span data-l="it">← valore</span></i></div>
+        <p class="unit"><span data-l="ko">퍼센트 이하 ← 단위</span><span data-l="it">percento, massimo ← unità</span></p>
         <div class="spacer"></div>
-        <span class="badge ok">Pubblicata · 2026-09-21</span>
+        <span class="badge ok"><span data-l="ko">게시 · 2026-09-21</span><span data-l="it">Pubblicata · 2026-09-21</span></span>
       </article>
 
       <article class="tile pending">
-        <span class="week">Non assegnato</span>
-        <h3>Composizione delle zone d'uso<span>용도지역 구성비</span></h3>
+        <span class="week"><span data-l="ko">미배정</span><span data-l="it">Non assegnato</span></span>
+        <h3 data-l="ko">용도지역 구성비</h3><h3 data-l="it">Composizione delle zone d'uso<span>용도지역 구성비</span></h3>
         <div class="spacer"></div>
-        <p>La quota di superficie per ciascuna classe non è ricavabile dalla scheda di 토지이음.</p>
-        <span class="badge wait">In attesa di consultazione</span>
+        <p><span data-l="ko">용도지역별 면적 비율은 토지이음 열람 화면에서 얻을 수 없다.</span><span data-l="it">La quota di superficie per ciascuna classe non è ricavabile dalla scheda di 토지이음.</span></p>
+        <span class="badge wait"><span data-l="ko">조회 대기</span><span data-l="it">In attesa di consultazione</span></span>
       </article>
 
     </div>
@@ -505,79 +611,97 @@
 
   <section class="sec" id="evidence">
     <header>
-      <h2>Scheda delle fonti · tabella <code>evidence</code></h2>
-      <p>Le righe qui sotto non sono scritte nella pagina: vengono rilette dalla tabella Supabase a ogni apertura. Se compaiono anche dopo il ricaricamento, su un altro dispositivo e nel browser di un compagno, sono salvate.</p>
+      <h2><span data-l="ko">출처 카드 · <code>evidence</code> 테이블</span><span data-l="it">Scheda delle fonti · tabella <code>evidence</code></span></h2>
+      <p><span data-l="ko">아래 행은 페이지에 적혀 있지 않다. 열 때마다 Supabase 테이블에서 다시 읽어 온다. 새로고침 후, 다른 기기와 팀원 브라우저에서도 보이면 저장된 것이다. 행 내용은 입력한 언어 그대로 표시된다.</span><span data-l="it">Le righe qui sotto non sono scritte nella pagina: vengono rilette dalla tabella Supabase a ogni apertura. Se compaiono anche dopo il ricaricamento, su un altro dispositivo e nel browser di un compagno, sono salvate. Il testo delle righe resta nella lingua in cui è stato inserito.</span></p>
     </header>
 
     <form class="ev-form" id="ev-form" autocomplete="off">
-      <label class="wide">Voce (item)
-        <input name="item" required placeholder="es. Zone d'uso sul lotto 안서동 300 — prevalente 자연녹지지역">
+      <label class="wide"><span data-l="ko">항목 (item)</span><span data-l="it">Voce (item)</span>
+        <input id="f-item" name="item" required data-ph-ko="예: 안서동 300 필지 용도지역 — 자연녹지지역 대부분" data-ph-it="es. Zone d'uso sul lotto 안서동 300 — prevalente 자연녹지지역">
       </label>
-      <label>Valore (value · solo numeri)
-        <input name="value" type="number" step="any" required placeholder="3">
+      <label><span data-l="ko">값 (value · 숫자만)</span><span data-l="it">Valore (value · solo numeri)</span>
+        <input id="f-value" name="value" type="number" step="any" required placeholder="3">
       </label>
-      <label>Unità (unit)
-        <input name="unit" required placeholder="zone d'uso">
+      <label><span data-l="ko">단위 (unit)</span><span data-l="it">Unità (unit)</span>
+        <input id="f-unit" name="unit" required data-ph-ko="용도지역 수" data-ph-it="zone d'uso">
       </label>
-      <label>Data di consultazione (queried_on)
-        <input name="queried_on" type="date" required>
+      <label><span data-l="ko">조회일 (queried_on)</span><span data-l="it">Data di consultazione (queried_on)</span>
+        <input id="f-queried" name="queried_on" type="date" required>
       </label>
-      <label class="wide">Fonte (source · servizio · articolo · indirizzo)
-        <input name="source" required placeholder="토지이음, 토지이용계획열람 — eum.go.kr/web/ar/lu/luLandDet.jsp">
+      <label class="wide"><span data-l="ko">출처 (source · 서비스 · 조문 · 주소)</span><span data-l="it">Fonte (source · servizio · articolo · indirizzo)</span>
+        <input id="f-source" name="source" required placeholder="토지이음, 토지이용계획열람 — eum.go.kr/web/ar/lu/luLandDet.jsp">
       </label>
       <div class="actions">
-        <button type="submit" id="ev-save">Salva nella tabella</button>
+        <button type="submit" id="ev-save"><span data-l="ko">테이블에 저장</span><span data-l="it">Salva nella tabella</span></button>
         <span class="status" id="ev-status" role="status" aria-live="polite"></span>
       </div>
     </form>
 
     <div class="ev-table-wrap">
       <table class="ev-table">
-        <thead><tr><th>Voce</th><th>Valore</th><th>Unità</th><th>Fonte</th><th>Consultato</th><th>Salvato</th></tr></thead>
+        <thead><tr>
+          <th><span data-l="ko">항목</span><span data-l="it">Voce</span></th>
+          <th><span data-l="ko">값</span><span data-l="it">Valore</span></th>
+          <th><span data-l="ko">단위</span><span data-l="it">Unità</span></th>
+          <th><span data-l="ko">출처</span><span data-l="it">Fonte</span></th>
+          <th><span data-l="ko">조회일</span><span data-l="it">Consultato</span></th>
+          <th><span data-l="ko">저장 시각</span><span data-l="it">Salvato</span></th>
+        </tr></thead>
         <tbody id="ev-rows"></tbody>
       </table>
-      <div class="ev-empty" id="ev-empty">Caricamento dal server…</div>
+      <div class="ev-empty" id="ev-empty" data-msg="loading"></div>
     </div>
   </section>
 
   <section class="sec">
     <header>
-      <h2>La scheda del terzo riquadro, campo per campo</h2>
-      <p>Valore e unità restano separati: «80 % max» in un campo solo non sarebbe più calcolabile.</p>
+      <h2><span data-l="ko">세 번째 칸의 카드, 항목별로</span><span data-l="it">La scheda del terzo riquadro, campo per campo</span></h2>
+      <p><span data-l="ko">값과 단위는 분리한다. 「80 % 이하」를 한 칸에 넣으면 더 이상 계산할 수 없다.</span><span data-l="it">Valore e unità restano separati: «80 % max» in un campo solo non sarebbe più calcolabile.</span></p>
     </header>
 
     <div class="fields">
-      <div class="row"><span class="k">Valore</span><span class="v">80</span></div>
-      <div class="row"><span class="k">Unità</span><span class="v">percento, massimo</span></div>
-      <div class="row"><span class="k">Fonte</span><span class="v">Ordinanza urbanistica di Cheonan, art. 61, c. 1, n. 16 <em>— in vigore 2024-05-17</em><br><em>천안시 도시계획 조례 제61조(용도지역안에서의 용적률) · 조례 제2613호</em></span></div>
-      <div class="row"><span class="k">Data di consultazione</span><span class="v">2026-09-21 <em>· law.go.kr (국가법령정보센터)</em></span></div>
-      <div class="row"><span class="k">Comando di riproduzione</span><span class="v"><em>law.go.kr → 자치법규 → «천안시 도시계획 조례» → 제61조</em></span></div>
+      <div class="row"><span class="k"><span data-l="ko">값</span><span data-l="it">Valore</span></span><span class="v">80</span></div>
+      <div class="row"><span class="k"><span data-l="ko">단위</span><span data-l="it">Unità</span></span><span class="v"><span data-l="ko">퍼센트 이하</span><span data-l="it">percento, massimo</span></span></div>
+      <div class="row"><span class="k"><span data-l="ko">출처</span><span data-l="it">Fonte</span></span><span class="v"><span data-l="ko">천안시 도시계획 조례 제61조 제1항 제16호 <em>— 시행 2024-05-17</em><br><em>제61조(용도지역안에서의 용적률) · 충청남도천안시조례 제2613호</em></span><span data-l="it">Ordinanza urbanistica di Cheonan, art. 61, c. 1, n. 16 <em>— in vigore 2024-05-17</em><br><em>천안시 도시계획 조례 제61조(용도지역안에서의 용적률) · 조례 제2613호</em></span></span></div>
+      <div class="row"><span class="k"><span data-l="ko">조회일</span><span data-l="it">Data di consultazione</span></span><span class="v">2026-09-21 <em>· law.go.kr (국가법령정보센터)</em></span></div>
+      <div class="row"><span class="k"><span data-l="ko">재현 방법</span><span data-l="it">Comando di riproduzione</span></span><span class="v"><em>law.go.kr → 자치법규 → «천안시 도시계획 조례» → 제61조</em></span></div>
     </div>
   </section>
 
   <section class="sec">
     <header>
-      <h2>Quello che non entra nel valore</h2>
+      <h2><span data-l="ko">값에 들어가지 않는 것</span><span data-l="it">Quello che non entra nel valore</span></h2>
     </header>
 
     <div class="two">
 
       <div class="panel">
-        <h3>Clausole e deroghe</h3>
-        <p class="note">Annotate a parte: mescolarle al valore genera errori.</p>
-        <ul>
+        <h3 data-l="ko">단서·특례</h3><h3 data-l="it">Clausole e deroghe</h3>
+        <p class="note"><span data-l="ko">따로 적는다. 값과 섞으면 오류가 생긴다.</span><span data-l="it">Annotate a parte: mescolarle al valore genera errori.</span></p>
+        <ul data-l="ko">
+          <li><b>제2항</b> — 녹지·관리·농림·자연환경보전지역에서 건축물인 기반시설은 시 도시계획위원회 심의를 거쳐 용적률을 따로 정할 수 있다. <em>이 대상지에 직접 해당.</em></li>
+          <li><b>제4항</b> — 대학 캠퍼스 밖에 짓는 학생 기숙사는 법정 상한까지 허용된다. <em>이 대상지에 직접 해당.</em></li>
+          <li><b>제5항</b> — 지방 소도읍지역에서 공동주택이 아닌 건축물은 제1항 값의 110 % 미만까지.</li>
+          <li><b>제6항</b> — 성장관리계획구역에는 제20조의3 제3항을 적용한다.</li>
+        </ul>
+        <ul data-l="it">
           <li><b>c. 2</b> — Nelle zone verdi, di gestione, agricolo-forestali e di tutela ambientale le opere di urbanizzazione costituite da edifici possono avere un FAR fissato a parte, previa delibera della Commissione urbanistica comunale. <em>Riguarda direttamente questo sito.</em></li>
           <li><b>c. 4</b> — I dormitori costruiti fuori dal campus per gli studenti dell'ateneo sono ammessi fino al massimo di legge. <em>Riguarda direttamente questo sito.</em></li>
           <li><b>c. 5</b> — Nei piccoli centri di provincia, edifici diversi dalle abitazioni collettive: fino a meno del 110 % del valore.</li>
           <li><b>c. 6</b> — Aree con piano di gestione della crescita: si applica l'art. 20-3, c. 3.</li>
         </ul>
-        <p class="linked"><b>Dato collegato, stessa consultazione</b> — rapporto di copertura 20 %, massimo (art. 56, c. 1, n. 16). Per le scuole in verde naturale l'art. 56, c. 3, n. 3 sale a 30 % in caso di ampliamento su lotto esistente con delibera: il lotto ha destinazione catastale 학교용지.</p>
+        <p class="linked"><span data-l="ko"><b>같은 조회의 연관 값</b> — 건폐율 20 % 이하(제56조 제1항 제16호). 자연녹지지역의 학교는 기존 부지에서 증축할 때 심의를 거쳐 제56조 제3항 제3호에 따라 30 %까지 가능하다. 이 필지의 지목은 학교용지다.</span><span data-l="it"><b>Dato collegato, stessa consultazione</b> — rapporto di copertura 20 %, massimo (art. 56, c. 1, n. 16). Per le scuole in verde naturale l'art. 56, c. 3, n. 3 sale a 30 % in caso di ampliamento su lotto esistente con delibera: il lotto ha destinazione catastale 학교용지.</span></p>
       </div>
 
       <div class="panel">
-        <h3>Le tre verifiche</h3>
-        <p class="note">Annotate una volta, così chi segue non le ripete.</p>
-        <ol>
+        <h3 data-l="ko">세 가지 확인</h3><h3 data-l="it">Le tre verifiche</h3>
+        <p class="note"><span data-l="ko">한 번 적어 두면 다음 사람이 반복하지 않는다.</span><span data-l="it">Annotate una volta, così chi segue non le ripete.</span></p>
+        <ol data-l="ko">
+          <li><b>현행 시행일인가?</b> 그렇다. 검색 목록과 본문 머리글 모두 시행 2024-05-17로, 같은 판이며 옛 판이 아니다.</li>
+          <li><b>맞는 용도지역인가?</b> 2026-09-21 토지이음에서 확인했다. 필지는 도시지역(천안도시지역)이고 확인도면상 대부분 자연녹지지역 → 제16호. 다만 보전녹지지역(제14호, 용적률 60 %)과 제2종일반주거지역(제4호, 250 %)도 함께 표시된다. 둘 이상의 용도지역에 걸친 대지는 국토계획법 제84조를 따른다.</li>
+          <li><b>단서가 있는가?</b> 있다. 제2·4·5·6항. 원문은 「…퍼센트 이하」, 즉 80 % 이하이며 고정값이 아니라 상한이다.</li>
+        </ol>
+        <ol data-l="it">
           <li><b>Data in vigore attuale?</b> Sì. La lista di ricerca e l'intestazione del testo riportano entrambe 시행 2024-05-17: stessa versione, non una versione vecchia.</li>
           <li><b>Classe giusta?</b> Verificata su 토지이음 il 2026-09-21. Il lotto ricade in 도시지역(천안도시지역) e il 확인도면 lo mostra quasi interamente in 자연녹지지역 → n. 16. La scheda del lotto elenca però anche 보전녹지지역 (n. 14, FAR 60 %) e 제2종일반주거지역 (n. 4, FAR 250 %): per i lotti a cavallo di più zone vale l'art. 84 della Legge sulla pianificazione territoriale.</li>
           <li><b>Ci sono clausole?</b> Sì, ai commi 2, 4, 5 e 6. Il testo dice «…퍼센트 이하», cioè <em>fino al</em> 80 percento: è un limite massimo, non un valore fisso.</li>
@@ -590,26 +714,56 @@
   <hr class="rule">
 
   <footer class="sec sources">
-    <p class="eyebrow">Fonti</p>
-    <p>[1] «천안시 도시계획 조례» artt. 56 e 61, 충청남도천안시조례 제2613호, in vigore 2024-05-17. 국가법령정보센터, <a href="https://www.law.go.kr/%EC%9E%90%EC%B9%98%EB%B2%95%EA%B7%9C/%EC%B2%9C%EC%95%88%EC%8B%9C%EB%8F%84%EC%8B%9C%EA%B3%84%ED%9A%8D%EC%A1%B0%EB%A1%80">law.go.kr</a> (consultato 2026-09-21).</p>
-    <p>[2] Scheda di consultazione del piano di utilizzo del suolo, 충청남도 천안시 동남구 안서동 300. 토지이음, <a href="https://www.eum.go.kr/web/ar/lu/luLandDet.jsp">eum.go.kr</a> (consultato 2026-09-21).</p>
-    <p>[3] Perimetro del campus: way OSM 231288273, punto-etichetta 36,83300 N · 127,17900 E (WGS84).</p>
-    <p>[4] Righe della scheda delle fonti: tabella <code>evidence</code> su Supabase, lette con la chiave publishable (protetta da RLS).</p>
+    <p class="eyebrow"><span data-l="ko">출처</span><span data-l="it">Fonti</span></p>
+    <p><span data-l="ko">[1] 「천안시 도시계획 조례」 제56조·제61조, 충청남도천안시조례 제2613호, 시행 2024-05-17. 국가법령정보센터, <a href="https://www.law.go.kr/%EC%9E%90%EC%B9%98%EB%B2%95%EA%B7%9C/%EC%B2%9C%EC%95%88%EC%8B%9C%EB%8F%84%EC%8B%9C%EA%B3%84%ED%9A%8D%EC%A1%B0%EB%A1%80">law.go.kr</a> (2026-09-21 조회).</span><span data-l="it">[1] «천안시 도시계획 조례» artt. 56 e 61, 충청남도천안시조례 제2613호, in vigore 2024-05-17. 국가법령정보센터, <a href="https://www.law.go.kr/%EC%9E%90%EC%B9%98%EB%B2%95%EA%B7%9C/%EC%B2%9C%EC%95%88%EC%8B%9C%EB%8F%84%EC%8B%9C%EA%B3%84%ED%9A%8D%EC%A1%B0%EB%A1%80">law.go.kr</a> (consultato 2026-09-21).</span></p>
+    <p><span data-l="ko">[2] 토지이용계획열람, 충청남도 천안시 동남구 안서동 300. 토지이음, <a href="https://www.eum.go.kr/web/ar/lu/luLandDet.jsp">eum.go.kr</a> (2026-09-21 조회).</span><span data-l="it">[2] Scheda di consultazione del piano di utilizzo del suolo, 충청남도 천안시 동남구 안서동 300. 토지이음, <a href="https://www.eum.go.kr/web/ar/lu/luLandDet.jsp">eum.go.kr</a> (consultato 2026-09-21).</span></p>
+    <p><span data-l="ko">[3] 캠퍼스 경계: OSM way 231288273, 라벨 포인트 36.83300 N · 127.17900 E (WGS84).</span><span data-l="it">[3] Perimetro del campus: way OSM 231288273, punto-etichetta 36,83300 N · 127,17900 E (WGS84).</span></p>
+    <p><span data-l="ko">[4] 출처 카드 행: Supabase <code>evidence</code> 테이블, publishable 키(RLS로 보호)로 읽음.</span><span data-l="it">[4] Righe della scheda delle fonti: tabella <code>evidence</code> su Supabase, lette con la chiave publishable (protetta da RLS).</span></p>
   </footer>
 
 </div>
 
+<script>
+  // Cambio lingua: attributi, placeholder, titolo, messaggi dello script e date dell'elenco.
+  (function () {
+    function apply(l, remember) {
+      var root = document.documentElement;
+      root.setAttribute('data-lang', l);
+      root.lang = l;
+      document.title = I18N[l].title;
+      document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+        b.setAttribute('aria-pressed', b.getAttribute('data-set-lang') === l ? 'true' : 'false');
+      });
+      document.querySelectorAll('[data-ph-' + l + ']').forEach(function (i) { i.placeholder = i.getAttribute('data-ph-' + l); });
+      document.querySelectorAll('[data-msg]').forEach(function (el) {
+        if (el.dataset.msg) setMsg(el, el.dataset.msg, JSON.parse(el.dataset.params || '{}'));
+      });
+      if (remember) {
+        try { localStorage.setItem('luogo-lang', l); } catch (e) {}
+        try { history.replaceState(null, '', '#' + l); } catch (e) {}
+      }
+      document.dispatchEvent(new CustomEvent('langchange'));
+    }
+    document.querySelectorAll('[data-set-lang]').forEach(function (b) {
+      b.addEventListener('click', function () { apply(b.getAttribute('data-set-lang'), true); });
+    });
+    window.addEventListener('hashchange', function () {
+      var h = location.hash.replace('#', '');
+      if (h === 'ko' || h === 'it') apply(h, true);
+    });
+    apply(lang(), false);
+  })();
+</script>
+
 <script nomodule>
-  document.getElementById('ev-empty').textContent = 'Questo browser è troppo vecchio per leggere la tabella: aprire la pagina con Chrome, Safari, Edge o Samsung Internet aggiornati.';
+  setMsg(document.getElementById('ev-empty'), 'oldBrowser');
 </script>
 
 <script>
   // Se dopo 12 secondi l'elenco è ancora in caricamento, lo si dice invece di restare fermi.
-  setTimeout(() => {
-    const e = document.getElementById('ev-empty');
-    if (e && !e.hidden && e.textContent.startsWith('Caricamento')) {
-      e.textContent = 'Nessuna risposta dopo 12 secondi. Probabile blocco di rete (Wi-Fi dell\'università, VPN o blocco pubblicità) verso cdn.jsdelivr.net o supabase.co: provare con i dati mobili o disattivare il blocco pubblicità, poi ricaricare.';
-    }
+  setTimeout(function () {
+    var e = document.getElementById('ev-empty');
+    if (e && !e.hidden && e.dataset.msg === 'loading') setMsg(e, 'timeout');
   }, 12000);
 </script>
 
@@ -625,19 +779,19 @@
     try { ({ createClient } = await import(cdn)); break; } catch (err) { console.warn('CDN non raggiungibile:', cdn, err); }
   }
   if (!createClient) {
-    empty.textContent = 'Impossibile scaricare la libreria di Supabase (cdn.jsdelivr.net ed esm.sh bloccati). Provare con i dati mobili o senza blocco pubblicità, poi ricaricare.';
+    setMsg(empty, 'noLib');
     save.disabled = true;
     throw new Error('supabase-js not loaded');
   }
 
   // Solo la chiave publishable può stare qui. Se qualcuno ci incolla una secret, la pagina si ferma.
   if (SUPABASE_PUBLISHABLE_KEY.startsWith('sb_secret_') || SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ')) {
-    empty.textContent = 'Chiave sbagliata in config.js: serve la chiave publishable (sb_publishable_…), mai la secret né la vecchia anon (eyJ…).';
+    setMsg(empty, 'wrongKey');
     save.disabled = true;
     throw new Error('wrong key type');
   }
   if (SUPABASE_URL.includes('YOUR-PROJECT')) {
-    empty.textContent = 'Progetto Supabase non ancora collegato: compilare config.js.';
+    setMsg(empty, 'noConfig');
     save.disabled = true;
     throw new Error('config missing');
   }
@@ -645,28 +799,24 @@
   const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
   form.queried_on.value = new Date().toLocaleDateString('sv-SE');
 
-  const fmt = (v) => new Intl.NumberFormat('it-IT').format(v);
-  const when = (ts) => new Date(ts).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' });
+  const fmt = (v) => new Intl.NumberFormat(locale()).format(v);
+  const when = (ts) => new Date(ts).toLocaleString(locale(), { dateStyle: 'short', timeStyle: 'short' });
 
+  // Restituisce la chiave del messaggio (tradotto al volo) oppure il testo grezzo del server.
   function explain(error) {
-    if (error.code === '42501') return 'Rifiutato da RLS: manca la policy (vedi supabase/evidence.sql).';
-    if (error.code === '23502' || error.code === '23514') return 'Il server ha rifiutato un campo vuoto o non valido.';
-    if (error.code === '22P02') return 'Valore non numerico: in «valore» vanno solo cifre.';
-    if (error.code === '42P01' || error.code === 'PGRST205') return 'Tabella evidence non trovata: eseguire supabase/evidence.sql.';
-    if (String(error.message).includes('401') || error.code === 'PGRST301') return 'Chiave non valida.';
-    if (/Failed to fetch|NetworkError|Load failed/i.test(String(error.message))) return 'Il browser non raggiunge supabase.co (rete dell\'università, VPN o blocco pubblicità). Provare con i dati mobili, poi ricaricare.';
-    return error.message;
+    if (error.code === '42501') return { msg: 'e42501' };
+    if (error.code === '23502' || error.code === '23514') return { msg: 'eEmpty' };
+    if (error.code === '22P02') return { msg: 'eNum' };
+    if (error.code === '42P01' || error.code === 'PGRST205') return { msg: 'eTable' };
+    if (String(error.message).includes('401') || error.code === 'PGRST301') return { msg: 'eKey' };
+    if (/Failed to fetch|NetworkError|Load failed/i.test(String(error.message))) return { msg: 'eNet' };
+    return { raw: error.message };
   }
 
-  async function load() {
-    const { data, error } = await supabase
-      .from('evidence')
-      .select('id, created_at, item, value, unit, source, queried_on')
-      .order('created_at', { ascending: false });
+  let lastData = [];
 
-    if (error) { empty.hidden = false; empty.textContent = 'Errore di lettura — ' + explain(error); return; }
-
-    rows.replaceChildren(...data.map((r) => {
+  function render() {
+    rows.replaceChildren(...lastData.map((r) => {
       const tr = document.createElement('tr');
       for (const [text, cls] of [[r.item], [fmt(r.value), 'num'], [r.unit], [r.source], [r.queried_on, 'mono'], [when(r.created_at), 'mono']]) {
         const td = document.createElement('td');
@@ -676,9 +826,23 @@
       }
       return tr;
     }));
-    empty.hidden = data.length > 0;
-    empty.textContent = 'La tabella è vuota: nessuna riga salvata sul server.';
   }
+
+  async function load() {
+    const { data, error } = await supabase
+      .from('evidence')
+      .select('id, created_at, item, value, unit, source, queried_on')
+      .order('created_at', { ascending: false });
+
+    if (error) { empty.hidden = false; setMsg(empty, 'readErr', { msg: explain(error) }); return; }
+
+    lastData = data;
+    render();
+    empty.hidden = data.length > 0;
+    setMsg(empty, 'empty');
+  }
+
+  document.addEventListener('langchange', render);
 
   form.addEventListener('submit', async (e) => {
     e.preventDefault();
@@ -692,14 +856,19 @@
     };
     save.disabled = true;
     status.className = 'status';
-    status.textContent = 'Salvataggio…';
+    setMsg(status, 'saving');
 
     const { data, error } = await supabase.from('evidence').insert(row).select('id, created_at').single();
 
     save.disabled = false;
-    if (error) { status.className = 'status err'; status.textContent = explain(error); return; }
+    if (error) {
+      status.className = 'status err';
+      const x = explain(error);
+      if (x.msg) setMsg(status, x.msg); else { status.dataset.msg = ''; status.textContent = x.raw; }
+      return;
+    }
     status.className = 'status ok';
-    status.textContent = `Salvata come riga id ${data.id} · ${when(data.created_at)}`;
+    setMsg(status, 'saved', { id: data.id, when: when(data.created_at) });
     form.reset();
     form.queried_on.value = new Date().toLocaleDateString('sv-SE');
     load();

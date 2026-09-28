@@ -7,7 +7,7 @@ indirizzo di deploy e repository nel testo — scadenza **2026-10-04, 23:59**.
 
 | File | Contenuto |
 |---|---|
-| `index.html` | pagina del team (settimana 3) + modulo e elenco della tabella `evidence` |
+| `index.html` | pagina del team (settimana 3) + modulo e elenco della tabella `evidence`, in **한국어 / Italiano** (selettore in alto; link diretti `#ko` e `#it`) |
 | `config.js` | URL del progetto e chiave **publishable** (unico posto da compilare) |
 | `supabase/evidence.sql` | tabella, vincoli NOT NULL, RLS e policy di lettura/inserimento |
 
