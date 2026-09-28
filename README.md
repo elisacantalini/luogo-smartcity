@@ -40,7 +40,7 @@ sul lotto; date e nomi restano leggibili in `item`.
 
 ## Log di verifica (da compilare)
 
-- **Persistenza** — righe id 1 e 2 salvate dal modulo il 2026-09-28 07:33 UTC: presenti dopo il ricaricamento ☑ · in un altro browser (Edge con profilo nuovo, Chrome) ☑ · in Table Editor ☑ · su un altro dispositivo (____) ☐ · nel browser di ____ ☐ (questi due dopo il deploy)
+- **Persistenza** — righe id 1 e 2 salvate dal modulo il 2026-09-28 07:33 UTC: presenti dopo il ricaricamento ☑ · in un altro browser (Edge con profilo nuovo, Chrome) ☑ · in Table Editor ☑ · su un altro dispositivo (smartphone, pagina pubblicata, 2026-09-28) ☑ · nel browser di ____ ☐
 - **Chiavi** — ricerca di `sb_secret_|service_role|eyJ…` nei file della cartella → nessuna chiave ☑ (2026-09-28). Ripetere dopo il commit: `git grep -nE "sb_secret_|service_role" HEAD`
 
 ## PDF di consegna
