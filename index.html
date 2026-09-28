@@ -599,12 +599,36 @@
 
 </div>
 
+<script nomodule>
+  document.getElementById('ev-empty').textContent = 'Questo browser è troppo vecchio per leggere la tabella: aprire la pagina con Chrome, Safari, Edge o Samsung Internet aggiornati.';
+</script>
+
+<script>
+  // Se dopo 12 secondi l'elenco è ancora in caricamento, lo si dice invece di restare fermi.
+  setTimeout(() => {
+    const e = document.getElementById('ev-empty');
+    if (e && !e.hidden && e.textContent.startsWith('Caricamento')) {
+      e.textContent = 'Nessuna risposta dopo 12 secondi. Probabile blocco di rete (Wi-Fi dell\'università, VPN o blocco pubblicità) verso cdn.jsdelivr.net o supabase.co: provare con i dati mobili o disattivare il blocco pubblicità, poi ricaricare.';
+    }
+  }, 12000);
+</script>
+
 <script type="module">
-  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
   import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js';
 
   const $ = (id) => document.getElementById(id);
   const form = $('ev-form'), rows = $('ev-rows'), empty = $('ev-empty'), status = $('ev-status'), save = $('ev-save');
+
+  // La libreria arriva da una CDN; se la prima è bloccata si prova la seconda.
+  let createClient;
+  for (const cdn of ['https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm', 'https://esm.sh/@supabase/supabase-js@2']) {
+    try { ({ createClient } = await import(cdn)); break; } catch (err) { console.warn('CDN non raggiungibile:', cdn, err); }
+  }
+  if (!createClient) {
+    empty.textContent = 'Impossibile scaricare la libreria di Supabase (cdn.jsdelivr.net ed esm.sh bloccati). Provare con i dati mobili o senza blocco pubblicità, poi ricaricare.';
+    save.disabled = true;
+    throw new Error('supabase-js not loaded');
+  }
 
   // Solo la chiave publishable può stare qui. Se qualcuno ci incolla una secret, la pagina si ferma.
   if (SUPABASE_PUBLISHABLE_KEY.startsWith('sb_secret_') || SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ')) {
@@ -630,6 +654,7 @@
     if (error.code === '22P02') return 'Valore non numerico: in «valore» vanno solo cifre.';
     if (error.code === '42P01' || error.code === 'PGRST205') return 'Tabella evidence non trovata: eseguire supabase/evidence.sql.';
     if (String(error.message).includes('401') || error.code === 'PGRST301') return 'Chiave non valida.';
+    if (/Failed to fetch|NetworkError|Load failed/i.test(String(error.message))) return 'Il browser non raggiunge supabase.co (rete dell\'università, VPN o blocco pubblicità). Provare con i dati mobili, poi ricaricare.';
     return error.message;
   }
 
