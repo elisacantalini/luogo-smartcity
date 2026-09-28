@@ -1,0 +1,6 @@
+.env
+.env.*
+!.env.example
+consegna/
+screenshots/
+__pycache__/

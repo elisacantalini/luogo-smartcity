@@ -1,0 +1,685 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head><body>
+<title>Indicatori Anseo-dong 300</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+  :root {
+    --ground: #F5F8FC;
+    --surface: #FFFFFF;
+    --surface-sunk: #EDF3FA;
+    --ink: #0B2447;
+    --ink-soft: #40567A;
+    --ink-faint: #6E829E;
+    --line: #D5E1F0;
+    --line-strong: #B6C9E0;
+    --accent: #19376D;
+    --accent-soft: #E8F1F7;
+    --highlight: #A5D7E8;
+    --ok-ink: #2B6A4F;
+    --ok-bg: #E3EFE9;
+    --ok-line: #A9CFBE;
+    --wait-ink: #8A6520;
+    --wait-bg: #F7EFDF;
+    --wait-line: #DDC79A;
+    --shadow: 0 1px 2px rgba(11, 36, 71, .06), 0 8px 24px -12px rgba(11, 36, 71, .22);
+
+    --serif: "IBM Plex Serif", Georgia, "Times New Roman", serif;
+    --sans: "IBM Plex Sans KR", "Malgun Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, "Cascadia Mono", Consolas, monospace;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #081324;
+      --surface: #0F2038;
+      --surface-sunk: #0B1A2E;
+      --ink: #E9F1F9;
+      --ink-soft: #A8BCD4;
+      --ink-faint: #7B90AB;
+      --line: #22385A;
+      --line-strong: #31507A;
+      --accent: #A5D7E8;
+      --accent-soft: #14273F;
+      --highlight: #A5D7E8;
+      --ok-ink: #8FD3B2;
+      --ok-bg: #122C22;
+      --ok-line: #2C5B46;
+      --wait-ink: #E3C88E;
+      --wait-bg: #2A2114;
+      --wait-line: #5B4824;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 28px -14px rgba(0, 0, 0, .8);
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --ground: #081324;
+    --surface: #0F2038;
+    --surface-sunk: #0B1A2E;
+    --ink: #E9F1F9;
+    --ink-soft: #A8BCD4;
+    --ink-faint: #7B90AB;
+    --line: #22385A;
+    --line-strong: #31507A;
+    --accent: #A5D7E8;
+    --accent-soft: #14273F;
+    --highlight: #A5D7E8;
+    --ok-ink: #8FD3B2;
+    --ok-bg: #122C22;
+    --ok-line: #2C5B46;
+    --wait-ink: #E3C88E;
+    --wait-bg: #2A2114;
+    --wait-line: #5B4824;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .5), 0 10px 28px -14px rgba(0, 0, 0, .8);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--ground);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap {
+    max-width: 1080px;
+    margin: 0 auto;
+    padding-inline: 20px;
+    padding-block: 40px 56px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+  }
+
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin: 0;
+  }
+
+  /* ---------- masthead ---------- */
+
+  .masthead { display: flex; flex-direction: column; gap: 18px; }
+
+  .masthead h1 {
+    font-family: var(--serif);
+    font-weight: 600;
+    font-size: clamp(27px, 4.4vw, 40px);
+    line-height: 1.15;
+    letter-spacing: -.012em;
+    text-wrap: balance;
+    margin: 0;
+  }
+
+  .masthead .ko {
+    font-family: var(--mono);
+    font-size: 13px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .facts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1px;
+    background: var(--line);
+    border: 1px solid var(--line);
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .facts div {
+    background: var(--surface);
+    padding: 12px 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .facts dt {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .07em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .facts dd {
+    margin: 0;
+    font-size: 14px;
+    font-weight: 500;
+    font-variant-numeric: tabular-nums;
+  }
+
+  .facts dd small {
+    display: block;
+    font-weight: 400;
+    font-size: 12px;
+    color: var(--ink-soft);
+    font-family: var(--mono);
+  }
+
+  /* ---------- section headings ---------- */
+
+  .sec { display: flex; flex-direction: column; gap: 16px; }
+
+  .sec > header { display: flex; flex-direction: column; gap: 4px; }
+
+  .sec h2 {
+    font-family: var(--sans);
+    font-size: 19px;
+    font-weight: 600;
+    letter-spacing: -.004em;
+    margin: 0;
+  }
+
+  .sec header p { margin: 0; color: var(--ink-soft); font-size: 13.5px; max-width: 62ch; }
+
+  /* ---------- tile grid ---------- */
+
+  .tiles {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(226px, 1fr));
+    gap: 14px;
+  }
+
+  .tile {
+    border-radius: 4px;
+    padding: 16px 16px 18px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-height: 186px;
+  }
+
+  .tile .week {
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+
+  .tile h3 {
+    margin: 0;
+    font-size: 14.5px;
+    font-weight: 600;
+    line-height: 1.3;
+  }
+
+  .tile h3 span { display: block; font-family: var(--mono); font-size: 12px; font-weight: 400; color: var(--ink-soft); }
+
+  .tile .spacer { flex: 1; }
+
+  /* pending tiles: dashed, unfilled, no lift — the empty box is the honest state */
+  .tile.pending {
+    border: 1px dashed var(--line-strong);
+    background: transparent;
+  }
+
+  .tile.pending p {
+    margin: 0;
+    font-size: 12.5px;
+    color: var(--ink-faint);
+    max-width: 30ch;
+  }
+
+  /* the published tile is the only filled object on the grid */
+  .tile.filled {
+    border: 1px solid var(--line);
+    border-top: 3px solid var(--accent);
+    background: var(--surface);
+    box-shadow: var(--shadow);
+  }
+
+  .value {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    font-family: var(--mono);
+    font-variant-numeric: tabular-nums;
+  }
+
+  .value b {
+    font-size: 46px;
+    font-weight: 600;
+    line-height: .95;
+    letter-spacing: -.02em;
+    color: var(--accent);
+  }
+
+  .value i { font-style: normal; font-size: 13px; color: var(--ink-soft); }
+
+  .unit {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+
+  .badge {
+    align-self: flex-start;
+    font-family: var(--mono);
+    font-size: 10.5px;
+    letter-spacing: .05em;
+    text-transform: uppercase;
+    padding: 2px 7px;
+    border-radius: 2px;
+    border: 1px solid;
+  }
+
+  .badge.ok { color: var(--ok-ink); background: var(--ok-bg); border-color: var(--ok-line); }
+  .badge.wait { color: var(--wait-ink); background: var(--wait-bg); border-color: var(--wait-line); }
+
+  /* ---------- four fields ---------- */
+
+  .fields {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    overflow: hidden;
+  }
+
+  .fields .row {
+    display: grid;
+    grid-template-columns: 200px 1fr;
+    gap: 16px;
+    padding: 13px 16px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .fields .row:last-child { border-bottom: 0; }
+
+  .fields .k {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    padding-top: 2px;
+  }
+
+  .fields .v { font-family: var(--mono); font-size: 13.5px; font-variant-numeric: tabular-nums; }
+  .fields .v em { font-style: normal; color: var(--ink-soft); }
+
+  @media (max-width: 560px) {
+    .fields .row { grid-template-columns: 1fr; gap: 4px; }
+  }
+
+  /* ---------- clauses + checks ---------- */
+
+  .two {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 14px;
+    align-items: start;
+  }
+
+  .panel {
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface-sunk);
+    padding: 16px 18px 18px;
+  }
+
+  .panel h3 {
+    margin: 0 0 4px;
+    font-size: 14px;
+    font-weight: 600;
+  }
+
+  .panel .note { margin: 0 0 12px; font-size: 12.5px; color: var(--ink-soft); }
+
+  .panel ol, .panel ul { margin: 0; padding-left: 18px; display: flex; flex-direction: column; gap: 9px; }
+  .panel li { font-size: 13px; }
+  .panel li b { font-family: var(--mono); font-weight: 500; font-size: 12.5px; }
+
+  .linked {
+    margin-top: 14px;
+    padding-top: 13px;
+    border-top: 1px solid var(--line);
+    font-size: 12.5px;
+    color: var(--ink-soft);
+  }
+
+  .linked b { font-family: var(--mono); font-size: 12.5px; color: var(--ink); font-weight: 500; }
+
+  /* ---------- sources ---------- */
+
+  .sources { display: flex; flex-direction: column; gap: 9px; }
+
+  .sources p { margin: 0; font-size: 12.5px; color: var(--ink-soft); }
+
+  .sources a { color: var(--accent); text-decoration-thickness: 1px; text-underline-offset: 2px; }
+  .sources a:hover { text-decoration-thickness: 2px; }
+
+  :focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  hr.rule { border: 0; border-top: 1px solid var(--line); margin: 0; }
+
+  /* ---------- evidence: form + list (settimana 4) ---------- */
+
+  .ev-form {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 12px;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    background: var(--surface);
+    padding: 16px;
+  }
+
+  .ev-form label { display: flex; flex-direction: column; gap: 4px; font-family: var(--mono); font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+  .ev-form label.wide { grid-column: 1 / -1; }
+
+  .ev-form input {
+    font: 14px var(--sans);
+    color: var(--ink);
+    background: var(--surface-sunk);
+    border: 1px solid var(--line-strong);
+    border-radius: 3px;
+    padding: 8px 10px;
+    text-transform: none;
+    letter-spacing: 0;
+  }
+
+  .ev-form .actions { grid-column: 1 / -1; display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+
+  .ev-form button {
+    font: 600 14px var(--sans);
+    color: #fff;
+    background: var(--accent);
+    border: 0;
+    border-radius: 3px;
+    padding: 9px 18px;
+    cursor: pointer;
+  }
+
+  :root[data-theme="dark"] .ev-form button { color: #081324; }
+  @media (prefers-color-scheme: dark) { :root:not([data-theme="light"]) .ev-form button { color: #081324; } }
+
+  .ev-form button:disabled { opacity: .55; cursor: progress; }
+
+  .status { font-family: var(--mono); font-size: 12.5px; color: var(--ink-soft); }
+  .status.err { color: #B3261E; }
+  .status.ok { color: var(--ok-ink); }
+
+  .ev-table-wrap { border: 1px solid var(--line); border-radius: 4px; background: var(--surface); overflow-x: auto; }
+  .ev-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .ev-table th { text-align: left; font-family: var(--mono); font-size: 10.5px; letter-spacing: .07em; text-transform: uppercase; color: var(--ink-faint); font-weight: 500; padding: 10px 12px; border-bottom: 1px solid var(--line); white-space: nowrap; }
+  .ev-table td { padding: 10px 12px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  .ev-table tr:last-child td { border-bottom: 0; }
+  .ev-table td.num { font-family: var(--mono); font-variant-numeric: tabular-nums; font-weight: 600; color: var(--accent); white-space: nowrap; }
+  .ev-table td.mono { font-family: var(--mono); font-size: 12px; white-space: nowrap; color: var(--ink-soft); }
+  .ev-empty { padding: 16px; color: var(--ink-faint); font-size: 13px; }
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Pianificazione della Smart City · Capstone Design · Settimana 4</p>
+    <h1>Campus di Cheonan, Università Sangmyung</h1>
+    <p class="ko">충청남도 천안시 동남구 안서동 300 · Sangmyungdae-gil 31, Anseo-dong, Dongnam-gu</p>
+
+    <dl class="facts">
+      <div>
+        <dt>Centro del sito</dt>
+        <dd>36,83300 N · 127,17900 E<small>WGS84 · OSM way 231288273</small></dd>
+      </div>
+      <div>
+        <dt>Estensione</dt>
+        <dd>490 × 550 m<small>N-S × E-O</small></dd>
+      </div>
+      <div>
+        <dt>Superficie catastale</dt>
+        <dd>192.602 ㎡<small>지목 학교용지</small></dd>
+      </div>
+      <div>
+        <dt>Zona d'uso prevalente</dt>
+        <dd>Verde naturale<small>자연녹지지역 · n. 16</small></dd>
+      </div>
+      <div>
+        <dt>Ambito di analisi</dt>
+        <dd>5 anelli da 1 km<small>34 circoscrizioni · 1.914 u. cens.</small></dd>
+      </div>
+      <div>
+        <dt>Centro di confronto</dt>
+        <dd>6,12 km<small>Municipio di Cheonan</small></dd>
+      </div>
+    </dl>
+  </header>
+
+  <hr class="rule">
+
+  <section class="sec">
+    <header>
+      <h2>Schermata del team</h2>
+      <p>Un riquadro per indicatore. Si pubblica solo ciò che ha valore, unità, fonte e data di consultazione: i riquadri non consultati restano vuoti e dichiarati.</p>
+    </header>
+
+    <div class="tiles">
+
+      <article class="tile pending">
+        <span class="week">Settimana 1</span>
+        <h3>Temperatura di superficie<span>지표면 온도</span></h3>
+        <div class="spacer"></div>
+        <p>Dati della Settimana 1 non ancora riportati in questa schermata.</p>
+        <span class="badge wait">In attesa di consultazione</span>
+      </article>
+
+      <article class="tile pending">
+        <span class="week">Settimana 2</span>
+        <h3>Densità abitativa su griglia<span>격자 인구밀도</span></h3>
+        <div class="spacer"></div>
+        <p>Dati della Settimana 2 non ancora riportati in questa schermata.</p>
+        <span class="badge wait">In attesa di consultazione</span>
+      </article>
+
+      <article class="tile filled">
+        <span class="week">Settimana 3</span>
+        <h3>Indice di edificabilità (FAR)<span>용적률</span></h3>
+        <div class="value"><b>80</b><i>← valore</i></div>
+        <p class="unit">percento, massimo ← unità</p>
+        <div class="spacer"></div>
+        <span class="badge ok">Pubblicata · 2026-09-21</span>
+      </article>
+
+      <article class="tile pending">
+        <span class="week">Non assegnato</span>
+        <h3>Composizione delle zone d'uso<span>용도지역 구성비</span></h3>
+        <div class="spacer"></div>
+        <p>La quota di superficie per ciascuna classe non è ricavabile dalla scheda di 토지이음.</p>
+        <span class="badge wait">In attesa di consultazione</span>
+      </article>
+
+    </div>
+  </section>
+
+  <section class="sec" id="evidence">
+    <header>
+      <h2>Scheda delle fonti · tabella <code>evidence</code></h2>
+      <p>Le righe qui sotto non sono scritte nella pagina: vengono rilette dalla tabella Supabase a ogni apertura. Se compaiono anche dopo il ricaricamento, su un altro dispositivo e nel browser di un compagno, sono salvate.</p>
+    </header>
+
+    <form class="ev-form" id="ev-form" autocomplete="off">
+      <label class="wide">Voce (item)
+        <input name="item" required placeholder="es. Zone d'uso sul lotto 안서동 300 — prevalente 자연녹지지역">
+      </label>
+      <label>Valore (value · solo numeri)
+        <input name="value" type="number" step="any" required placeholder="3">
+      </label>
+      <label>Unità (unit)
+        <input name="unit" required placeholder="zone d'uso">
+      </label>
+      <label>Data di consultazione (queried_on)
+        <input name="queried_on" type="date" required>
+      </label>
+      <label class="wide">Fonte (source · servizio · articolo · indirizzo)
+        <input name="source" required placeholder="토지이음, 토지이용계획열람 — eum.go.kr/web/ar/lu/luLandDet.jsp">
+      </label>
+      <div class="actions">
+        <button type="submit" id="ev-save">Salva nella tabella</button>
+        <span class="status" id="ev-status" role="status" aria-live="polite"></span>
+      </div>
+    </form>
+
+    <div class="ev-table-wrap">
+      <table class="ev-table">
+        <thead><tr><th>Voce</th><th>Valore</th><th>Unità</th><th>Fonte</th><th>Consultato</th><th>Salvato</th></tr></thead>
+        <tbody id="ev-rows"></tbody>
+      </table>
+      <div class="ev-empty" id="ev-empty">Caricamento dal server…</div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header>
+      <h2>La scheda del terzo riquadro, campo per campo</h2>
+      <p>Valore e unità restano separati: «80 % max» in un campo solo non sarebbe più calcolabile.</p>
+    </header>
+
+    <div class="fields">
+      <div class="row"><span class="k">Valore</span><span class="v">80</span></div>
+      <div class="row"><span class="k">Unità</span><span class="v">percento, massimo</span></div>
+      <div class="row"><span class="k">Fonte</span><span class="v">Ordinanza urbanistica di Cheonan, art. 61, c. 1, n. 16 <em>— in vigore 2024-05-17</em><br><em>천안시 도시계획 조례 제61조(용도지역안에서의 용적률) · 조례 제2613호</em></span></div>
+      <div class="row"><span class="k">Data di consultazione</span><span class="v">2026-09-21 <em>· law.go.kr (국가법령정보센터)</em></span></div>
+      <div class="row"><span class="k">Comando di riproduzione</span><span class="v"><em>law.go.kr → 자치법규 → «천안시 도시계획 조례» → 제61조</em></span></div>
+    </div>
+  </section>
+
+  <section class="sec">
+    <header>
+      <h2>Quello che non entra nel valore</h2>
+    </header>
+
+    <div class="two">
+
+      <div class="panel">
+        <h3>Clausole e deroghe</h3>
+        <p class="note">Annotate a parte: mescolarle al valore genera errori.</p>
+        <ul>
+          <li><b>c. 2</b> — Nelle zone verdi, di gestione, agricolo-forestali e di tutela ambientale le opere di urbanizzazione costituite da edifici possono avere un FAR fissato a parte, previa delibera della Commissione urbanistica comunale. <em>Riguarda direttamente questo sito.</em></li>
+          <li><b>c. 4</b> — I dormitori costruiti fuori dal campus per gli studenti dell'ateneo sono ammessi fino al massimo di legge. <em>Riguarda direttamente questo sito.</em></li>
+          <li><b>c. 5</b> — Nei piccoli centri di provincia, edifici diversi dalle abitazioni collettive: fino a meno del 110 % del valore.</li>
+          <li><b>c. 6</b> — Aree con piano di gestione della crescita: si applica l'art. 20-3, c. 3.</li>
+        </ul>
+        <p class="linked"><b>Dato collegato, stessa consultazione</b> — rapporto di copertura 20 %, massimo (art. 56, c. 1, n. 16). Per le scuole in verde naturale l'art. 56, c. 3, n. 3 sale a 30 % in caso di ampliamento su lotto esistente con delibera: il lotto ha destinazione catastale 학교용지.</p>
+      </div>
+
+      <div class="panel">
+        <h3>Le tre verifiche</h3>
+        <p class="note">Annotate una volta, così chi segue non le ripete.</p>
+        <ol>
+          <li><b>Data in vigore attuale?</b> Sì. La lista di ricerca e l'intestazione del testo riportano entrambe 시행 2024-05-17: stessa versione, non una versione vecchia.</li>
+          <li><b>Classe giusta?</b> Verificata su 토지이음 il 2026-09-21. Il lotto ricade in 도시지역(천안도시지역) e il 확인도면 lo mostra quasi interamente in 자연녹지지역 → n. 16. La scheda del lotto elenca però anche 보전녹지지역 (n. 14, FAR 60 %) e 제2종일반주거지역 (n. 4, FAR 250 %): per i lotti a cavallo di più zone vale l'art. 84 della Legge sulla pianificazione territoriale.</li>
+          <li><b>Ci sono clausole?</b> Sì, ai commi 2, 4, 5 e 6. Il testo dice «…퍼센트 이하», cioè <em>fino al</em> 80 percento: è un limite massimo, non un valore fisso.</li>
+        </ol>
+      </div>
+
+    </div>
+  </section>
+
+  <hr class="rule">
+
+  <footer class="sec sources">
+    <p class="eyebrow">Fonti</p>
+    <p>[1] «천안시 도시계획 조례» artt. 56 e 61, 충청남도천안시조례 제2613호, in vigore 2024-05-17. 국가법령정보센터, <a href="https://www.law.go.kr/%EC%9E%90%EC%B9%98%EB%B2%95%EA%B7%9C/%EC%B2%9C%EC%95%88%EC%8B%9C%EB%8F%84%EC%8B%9C%EA%B3%84%ED%9A%8D%EC%A1%B0%EB%A1%80">law.go.kr</a> (consultato 2026-09-21).</p>
+    <p>[2] Scheda di consultazione del piano di utilizzo del suolo, 충청남도 천안시 동남구 안서동 300. 토지이음, <a href="https://www.eum.go.kr/web/ar/lu/luLandDet.jsp">eum.go.kr</a> (consultato 2026-09-21).</p>
+    <p>[3] Perimetro del campus: way OSM 231288273, punto-etichetta 36,83300 N · 127,17900 E (WGS84).</p>
+    <p>[4] Righe della scheda delle fonti: tabella <code>evidence</code> su Supabase, lette con la chiave publishable (protetta da RLS).</p>
+  </footer>
+
+</div>
+
+<script type="module">
+  import { createClient } from 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/+esm';
+  import { SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY } from './config.js';
+
+  const $ = (id) => document.getElementById(id);
+  const form = $('ev-form'), rows = $('ev-rows'), empty = $('ev-empty'), status = $('ev-status'), save = $('ev-save');
+
+  // Solo la chiave publishable può stare qui. Se qualcuno ci incolla una secret, la pagina si ferma.
+  if (SUPABASE_PUBLISHABLE_KEY.startsWith('sb_secret_') || SUPABASE_PUBLISHABLE_KEY.startsWith('eyJ')) {
+    empty.textContent = 'Chiave sbagliata in config.js: serve la chiave publishable (sb_publishable_…), mai la secret né la vecchia anon (eyJ…).';
+    save.disabled = true;
+    throw new Error('wrong key type');
+  }
+  if (SUPABASE_URL.includes('YOUR-PROJECT')) {
+    empty.textContent = 'Progetto Supabase non ancora collegato: compilare config.js.';
+    save.disabled = true;
+    throw new Error('config missing');
+  }
+
+  const supabase = createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+  form.queried_on.value = new Date().toLocaleDateString('sv-SE');
+
+  const fmt = (v) => new Intl.NumberFormat('it-IT').format(v);
+  const when = (ts) => new Date(ts).toLocaleString('it-IT', { dateStyle: 'short', timeStyle: 'short' });
+
+  function explain(error) {
+    if (error.code === '42501') return 'Rifiutato da RLS: manca la policy (vedi supabase/evidence.sql).';
+    if (error.code === '23502' || error.code === '23514') return 'Il server ha rifiutato un campo vuoto o non valido.';
+    if (error.code === '22P02') return 'Valore non numerico: in «valore» vanno solo cifre.';
+    if (error.code === '42P01' || error.code === 'PGRST205') return 'Tabella evidence non trovata: eseguire supabase/evidence.sql.';
+    if (String(error.message).includes('401') || error.code === 'PGRST301') return 'Chiave non valida.';
+    return error.message;
+  }
+
+  async function load() {
+    const { data, error } = await supabase
+      .from('evidence')
+      .select('id, created_at, item, value, unit, source, queried_on')
+      .order('created_at', { ascending: false });
+
+    if (error) { empty.hidden = false; empty.textContent = 'Errore di lettura — ' + explain(error); return; }
+
+    rows.replaceChildren(...data.map((r) => {
+      const tr = document.createElement('tr');
+      for (const [text, cls] of [[r.item], [fmt(r.value), 'num'], [r.unit], [r.source], [r.queried_on, 'mono'], [when(r.created_at), 'mono']]) {
+        const td = document.createElement('td');
+        td.textContent = text;
+        if (cls) td.className = cls;
+        tr.append(td);
+      }
+      return tr;
+    }));
+    empty.hidden = data.length > 0;
+    empty.textContent = 'La tabella è vuota: nessuna riga salvata sul server.';
+  }
+
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const f = new FormData(form);
+    const row = {
+      item: f.get('item').trim(),
+      value: Number(f.get('value')),
+      unit: f.get('unit').trim(),
+      source: f.get('source').trim(),
+      queried_on: f.get('queried_on'),
+    };
+    save.disabled = true;
+    status.className = 'status';
+    status.textContent = 'Salvataggio…';
+
+    const { data, error } = await supabase.from('evidence').insert(row).select('id, created_at').single();
+
+    save.disabled = false;
+    if (error) { status.className = 'status err'; status.textContent = explain(error); return; }
+    status.className = 'status ok';
+    status.textContent = `Salvata come riga id ${data.id} · ${when(data.created_at)}`;
+    form.reset();
+    form.queried_on.value = new Date().toLocaleDateString('sv-SE');
+    load();
+  });
+
+  load();
+</script>
+</body></html>
