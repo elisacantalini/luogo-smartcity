@@ -21,7 +21,7 @@ indirizzo di deploy e repository nel testo — scadenza **2026-10-04, 23:59**.
 4. **Prova locale** — nella cartella: `python -m http.server 8000` → http://localhost:8000
    (i moduli ES non funzionano aprendo il file con doppio clic).
 5. **Salvare le 2 righe** dal modulo della pagina (sotto).
-6. **Deploy** — pubblicare la cartella (GitHub Pages del repository del team o Netlify) e annotare l'indirizzo.
+6. **Deploy** — GitHub Pages, branch main, cartella / (root): https://elisacantalini.github.io/luogo-smartcity/
 7. **Verifiche** — compilare il log qui sotto, poi commit e push.
 
 ## Le 2 righe (dal compito settimana 4 del corso principale, consultate su 토지이음 il 2026-09-28)
@@ -53,5 +53,5 @@ sul lotto; date e nomi restano leggibili in `item`.
 
 | | |
 |---|---|
-| Deploy | *(da compilare)* |
-| Repository | github.com/chaewoo123/444 |
+| Deploy | https://elisacantalini.github.io/luogo-smartcity/ |
+| Repository | https://github.com/elisacantalini/luogo-smartcity |
