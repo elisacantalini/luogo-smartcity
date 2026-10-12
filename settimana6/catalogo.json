@@ -1,0 +1,98 @@
+{
+ "catalogo": "Catalogo dati extracurricolare · settimana 6 · team LUOGO",
+ "area": "Campus Sangmyung di Cheonan (안서동 300) + 1 km · 385 celle da 0,81 ha = 311,85 ha",
+ "generato_da": "compito 6/fase6_catalogo_extra.py (da dati/indicatore6_catalogo.csv e dati/celle.csv)",
+ "righe": [
+  {
+   "id": "ind6-10",
+   "chart": "confronto",
+   "item_it": "Superficie idonea, pendenza ≤ 10 %",
+   "item_ko": "적합 면적, 경사 ≤ 10 %",
+   "value": 52.65,
+   "unit": "ha",
+   "share_pct": 16.9,
+   "highlight": false,
+   "source": "SRTM 90 m (CGIAR-CSI v4.1) via OpenTopoData srtm90m · 3 condizioni: pendenza ≤ soglia, esposizione 135–225°, quota ≤ strada + 50 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "ind6-15",
+   "chart": "confronto",
+   "item_it": "Superficie idonea, pendenza ≤ 15 % (scenario base)",
+   "item_ko": "적합 면적, 경사 ≤ 15 % (기본 시나리오)",
+   "value": 62.37,
+   "unit": "ha",
+   "share_pct": 20.0,
+   "highlight": true,
+   "source": "SRTM 90 m (CGIAR-CSI v4.1) via OpenTopoData srtm90m · 3 condizioni: pendenza ≤ soglia, esposizione 135–225°, quota ≤ strada + 50 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "ind6-25",
+   "chart": "confronto",
+   "item_it": "Superficie idonea, pendenza ≤ 25 %",
+   "item_ko": "적합 면적, 경사 ≤ 25 %",
+   "value": 80.19,
+   "unit": "ha",
+   "share_pct": 25.7,
+   "highlight": false,
+   "source": "SRTM 90 m (CGIAR-CSI v4.1) via OpenTopoData srtm90m · 3 condizioni: pendenza ≤ soglia, esposizione 135–225°, quota ≤ strada + 50 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "lc-edificato",
+   "chart": "composizione",
+   "item_it": "Edificato",
+   "item_ko": "시가지",
+   "value": 177.39,
+   "unit": "ha",
+   "cells": 219,
+   "highlight": false,
+   "source": "Impact Observatory/Esri, Sentinel-2 10 m Land Use/Land Cover 2025 · classe maggioritaria per cella di 90 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "lc-bosco",
+   "chart": "composizione",
+   "item_it": "Bosco",
+   "item_ko": "산림",
+   "value": 115.83,
+   "unit": "ha",
+   "cells": 143,
+   "highlight": true,
+   "source": "Impact Observatory/Esri, Sentinel-2 10 m Land Use/Land Cover 2025 · classe maggioritaria per cella di 90 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "lc-acqua",
+   "chart": "composizione",
+   "item_it": "Acqua",
+   "item_ko": "수면",
+   "value": 15.39,
+   "unit": "ha",
+   "cells": 19,
+   "highlight": false,
+   "source": "Impact Observatory/Esri, Sentinel-2 10 m Land Use/Land Cover 2025 · classe maggioritaria per cella di 90 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  },
+  {
+   "id": "lc-prati",
+   "chart": "composizione",
+   "item_it": "Prati e arbusti",
+   "item_ko": "초지·관목",
+   "value": 3.24,
+   "unit": "ha",
+   "cells": 4,
+   "highlight": false,
+   "source": "Impact Observatory/Esri, Sentinel-2 10 m Land Use/Land Cover 2025 · classe maggioritaria per cella di 90 m",
+   "queried_on": "2026-10-12",
+   "is_latest": true
+  }
+ ]
+}

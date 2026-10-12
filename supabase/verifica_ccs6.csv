@@ -1,0 +1,6 @@
+﻿controllo,righe_attese,righe_supabase,esito,dettaglio
+catalog,7,7,OK,
+evidence,2,2,OK,1: 16 avvisi distinti 1986→2023 | 2: 3 zone d'uso
+catalog · scrittura anonima,,,RIFIUTATA (OK),"{""code"":""42501"",""details"":null,""hint"":null,""message"":""new row violates row-level security policy for table \""catalog\""""}"
+evidence · data futura,,,RIFIUTATA (OK),"{""code"":""42501"",""details"":null,""hint"":null,""message"":""new row violates row-level security policy for table \""evidence\"""""
+evidence · modifica anonima,,,NESSUNA RIGA MODIFICATA (OK),200 []

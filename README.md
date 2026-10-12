@@ -55,3 +55,49 @@ sul lotto; date e nomi restano leggibili in `item`.
 |---|---|
 | Deploy | https://elisacantalini.github.io/luogo-smartcity/ |
 | Repository | https://github.com/elisacantalini/luogo-smartcity |
+
+---
+
+# Settimana 6 extracurricolare — Due grafici dal catalogo · Team LUOGO
+
+Consegna: LMS > Settimana 6 extracurricolare — PDF di 1 pagina (2 screenshot della pubblicazione e registro dei
+controlli), indirizzo di deploy e repository nel testo — scadenza **2026-10-18, 23:59**.
+
+| File | Contenuto |
+|---|---|
+| `settimana6/index.html` | pagina con i 2 grafici (barre = confronto, ciambella = composizione), bilingue 한국어 / Italiano |
+| `settimana6/catalogo.json` | righe del catalogo lette dalla pagina (`id`, `item_it/ko`, `value` numerico, `unit`, `source`, `queried_on`, `is_latest`) |
+
+Le righe sono generate da `compito 6/fase6_catalogo_extra.py` (corso principale, settimana 6) a partire da
+`dati/indicatore6_catalogo.csv` e `dati/celle.csv`: i valori sono gli stessi del PDF del corso principale.
+La tabella Supabase `evidence` della settimana 4 non è usata: il 2026-10-12 il dominio del progetto non risolveva
+(progetto in pausa o eliminato).
+
+**Indirizzo di produzione:** https://elisacantalini.github.io/luogo-smartcity/settimana6/ (GitHub Pages, branch `main`).
+
+## I 6 elementi
+
+| Elemento | Grafico A · barre | Grafico B · ciambella |
+|---|---|---|
+| Titolo | «Superficie idonea per soglia di pendenza (10 · 15 · 25 %)» | «Copertura del suolo nell'area di 1 km (2025)» |
+| Assi / origine | asse verticale da 0 a 100 ha, tacche ogni 20 | totale = 100 % (311,85 ha), 4 spicchi |
+| Unità | ha, e % dell'area tra parentesi | % e ha nella legenda |
+| Fonte | nota sotto il grafico + colonna della tabella | nota sotto il grafico + colonna della tabella |
+| Data | 2026-10-12 | 2026-10-12 |
+| Evidenza | solo lo scenario base 15 % in arancione | solo il bosco in arancione, etichetta «evidenziato» |
+
+## Registro dei controlli (5 controlli)
+
+Autoverifica del 2026-10-12 (Claude Code, browser con viewport 375 × 812 e desktop 1100 px). Le colonne
+**Compagno** vanno compilate da chi verifica (1 riga in chat: nome del grafico · verificatore · voci non superate).
+
+| # | Controllo | Criterio | Autoverifica | Compagno |
+|---|---|---|---|---|
+| 1 | Distanza | titolo, assi e valori leggibili dalle ultime file | titolo 17–20 px, valori 13 px, assi 12 px | |
+| 2 | Colore | 1 sola evidenza, etichette affiancate | 1 arancione per grafico; valori scritti su ogni barra e nella legenda | |
+| 3 | Larghezza | a 375 px etichette non sovrapposte | ☑ nessun elemento oltre i 375 px; sotto i 460 px etichette corte «10 %» + titolo dell'asse | |
+| 4 | Valore | etichette = righe `is_latest` del catalogo | ☑ 52,7 · 62,4 · 80,2 ha e 56,9 · 37,1 · 4,9 · 1,0 % uguali a `catalogo.json` (controllo automatico) | |
+| 5 | Fonte | fonte e data in nota coerenti con il catalogo | ☑ nota generata dai campi `source` e `queried_on` delle stesse righe | |
+
+**Chiavi** — ricerca di `sb_secret_|service_role|eyJ…` nell'albero e in tutta la storia (`git grep … $(git rev-list --all)`):
+solo testo di commenti e controlli, nessuna chiave (2026-10-12). La pagina della settimana 6 non usa chiavi.

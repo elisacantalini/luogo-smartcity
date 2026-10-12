@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grafici settimana 6 · LUOGO</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600&family=IBM+Plex+Sans+KR:wght@400;500;600;700&family=IBM+Plex+Serif:wght@600&display=swap">
+<style>
+  :root {
+    --ground: #F5F8FC; --surface: #FFFFFF; --surface-sunk: #EDF3FA;
+    --ink: #0B2447; --ink-soft: #40567A; --ink-faint: #6E829E;
+    --line: #D5E1F0; --line-strong: #B6C9E0; --accent: #19376D; --accent-soft: #E8F1F7;
+    --bar: #2F4B7C;          /* barre e spicchi non evidenziati */
+    --bar-2: #8FA6C4; --bar-3: #C3D1E3;
+    --hl: #D9822B;           /* unico colore di evidenza */
+    --shadow: 0 1px 2px rgba(11, 36, 71, .06), 0 8px 24px -12px rgba(11, 36, 71, .22);
+    --serif: "IBM Plex Serif", Georgia, serif;
+    --sans: "IBM Plex Sans KR", "Malgun Gothic", system-ui, -apple-system, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --ground: #081324; --surface: #0F2038; --surface-sunk: #0B1A2E; --ink: #E9F1F9; --ink-soft: #A8BCD4; --ink-faint: #7B90AB;
+      --line: #22385A; --line-strong: #31507A; --accent: #A5D7E8; --accent-soft: #14273F;
+      --bar: #6F8FC0; --bar-2: #3E5A86; --bar-3: #2A4166; --hl: #F0A04B;
+      --shadow: 0 1px 2px rgba(0,0,0,.5), 0 10px 28px -14px rgba(0,0,0,.8);
+    }
+  }
+  :root[data-theme="dark"] {
+    --ground: #081324; --surface: #0F2038; --surface-sunk: #0B1A2E; --ink: #E9F1F9; --ink-soft: #A8BCD4; --ink-faint: #7B90AB;
+    --line: #22385A; --line-strong: #31507A; --accent: #A5D7E8; --accent-soft: #14273F;
+    --bar: #6F8FC0; --bar-2: #3E5A86; --bar-3: #2A4166; --hl: #F0A04B;
+  }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--ground); color: var(--ink); font: 15px/1.55 var(--sans); }
+  .wrap { max-width: 920px; margin: 0 auto; padding: 20px 16px 48px; }
+  .topbar { display: flex; justify-content: space-between; align-items: center; gap: 12px; flex-wrap: wrap; }
+  .back { color: var(--ink-soft); font-size: 13px; text-decoration: none; }
+  .back:hover { color: var(--ink); text-decoration: underline; }
+  .lang-switch { display: inline-flex; border: 1px solid var(--line-strong); border-radius: 999px; padding: 2px; background: var(--surface); }
+  .lang-switch button { font: 500 13px var(--sans); color: var(--ink-soft); background: transparent; border: 0; border-radius: 999px; padding: 5px 14px; cursor: pointer; }
+  .lang-switch button[aria-pressed="true"] { background: var(--accent); color: var(--surface); }
+  :root:not([data-lang="ko"]) [data-l="ko"], :root[data-lang="ko"] [data-l="it"] { display: none !important; }
+  header { margin: 22px 0 18px; }
+  .eyebrow { font: 600 12px var(--mono); letter-spacing: .06em; text-transform: uppercase; color: var(--ink-faint); }
+  h1 { font: 600 clamp(24px, 4.6vw, 34px)/1.2 var(--serif); margin: 6px 0 8px; }
+  .lead { color: var(--ink-soft); margin: 0; max-width: 62ch; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; box-shadow: var(--shadow); padding: 18px 18px 14px; margin: 18px 0; }
+  .card h2 { font: 600 clamp(17px, 2.8vw, 20px)/1.3 var(--sans); margin: 0 0 2px; }
+  .kind { font: 500 12px var(--mono); color: var(--ink-faint); margin: 0 0 10px; }
+  .chart { width: 100%; min-height: 240px; }
+  .chart svg { display: block; width: 100%; height: auto; overflow: visible; }
+  .chart text { font-family: var(--sans); fill: var(--ink-soft); }
+  .chart .val { fill: var(--ink); font-weight: 600; }
+  .chart .axis { stroke: var(--line-strong); }
+  .chart .grid { stroke: var(--line); }
+  .donut-row { display: flex; gap: 22px; align-items: center; flex-wrap: wrap; }
+  .donut-row .chart { flex: 0 0 auto; width: min(280px, 100%); min-height: 0; }
+  .legend { flex: 1 1 220px; list-style: none; margin: 0; padding: 0; }
+  .legend li { display: grid; grid-template-columns: 14px 1fr auto; gap: 10px; align-items: baseline; padding: 7px 0; border-bottom: 1px solid var(--line); }
+  .legend .sw { width: 14px; height: 14px; border-radius: 3px; transform: translateY(2px); }
+  .legend .num { font: 600 14px var(--mono); font-variant-numeric: tabular-nums; color: var(--ink); white-space: nowrap; }
+  .legend .hl-tag { font-size: 12px; color: var(--hl); font-weight: 600; }
+  .note { font-size: 12.5px; color: var(--ink-faint); margin: 10px 0 0; }
+  table { width: 100%; border-collapse: collapse; margin-top: 12px; font-size: 13px; }
+  th, td { text-align: left; padding: 7px 8px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-weight: 600; color: var(--ink-soft); background: var(--surface-sunk); }
+  td.n { font: 600 13px var(--mono); font-variant-numeric: tabular-nums; text-align: right; white-space: nowrap; color: var(--accent); }
+  td.m { font: 12px var(--mono); color: var(--ink-faint); white-space: nowrap; }
+  .tscroll { overflow-x: auto; }
+  @media (max-width: 560px) { .col-src, .col-date { display: none; } }
+  .err { color: #B3261E; font-size: 14px; }
+  footer { font-size: 12.5px; color: var(--ink-faint); border-top: 1px solid var(--line); padding-top: 12px; margin-top: 26px; }
+  footer a { color: var(--ink-soft); }
+</style>
+<script>
+  (function () {
+    var h = (location.hash || '').replace('#', ''), saved = null;
+    try { saved = localStorage.getItem('luogo-lang'); } catch (e) {}
+    var lang = (h === 'ko' || h === 'it') ? h : (saved === 'ko' || saved === 'it') ? saved
+             : ((navigator.language || '').toLowerCase().indexOf('it') === 0 ? 'it' : 'ko');
+    document.documentElement.setAttribute('data-lang', lang); document.documentElement.lang = lang;
+  })();
+</script>
+</head>
+<body>
+<div class="wrap">
+  <div class="topbar">
+    <a class="back" href="../"><span data-l="it">← Pagina del team</span><span data-l="ko">← 팀 페이지</span></a>
+    <div class="lang-switch" role="group" aria-label="Lingua / 언어">
+      <button type="button" data-set="ko">한국어</button><button type="button" data-set="it">Italiano</button>
+    </div>
+  </div>
+
+  <header>
+    <div class="eyebrow">LUOGO · <span data-l="it">Settimana 6 extracurricolare</span><span data-l="ko">6주차 비교과</span></div>
+    <h1><span data-l="it">Due grafici dal catalogo</span><span data-l="ko">카탈로그에서 그린 그래프 두 개</span></h1>
+    <p class="lead">
+      <span data-l="it">Campus Sangmyung di Cheonan (안서동 300) e 1 km attorno. Ogni barra e ogni spicchio corrispondono a una riga di <a href="catalogo.json">catalogo.json</a>. Sotto ogni grafico c'è la tabella con valore, fonte e data.</span>
+      <span data-l="ko">상명대 천안캠퍼스(안서동 300)와 반경 1 km. 막대와 조각 하나하나가 <a href="catalogo.json">catalogo.json</a>의 한 행과 대응합니다. 그래프 아래 표에서 값·출처·조회일을 확인할 수 있습니다.</span>
+    </p>
+  </header>
+
+  <section class="card" aria-labelledby="t-a">
+    <h2 id="t-a"><span data-l="it">Superficie idonea per soglia di pendenza (10 · 15 · 25 %)</span><span data-l="ko">경사 기준(10 · 15 · 25 %)별 적합 면적</span></h2>
+    <p class="kind"><span data-l="it">Confronto · barre · area di 1 km = 311,85 ha</span><span data-l="ko">비교 · 막대 · 반경 1 km = 311.85 ha</span></p>
+    <div class="chart" id="chart-a" role="img"></div>
+    <p class="note" id="note-a"></p>
+    <div class="tscroll"><table id="tab-a"></table></div>
+  </section>
+
+  <section class="card" aria-labelledby="t-b">
+    <h2 id="t-b"><span data-l="it">Copertura del suolo nell'area di 1 km (2025)</span><span data-l="ko">반경 1 km 범위의 토지피복 구성 (2025)</span></h2>
+    <p class="kind"><span data-l="it">Composizione · ciambella · totale 100 % = 385 celle da 0,81 ha</span><span data-l="ko">구성 · 도넛 · 합계 100 % = 0.81 ha 셀 385개</span></p>
+    <div class="donut-row"><div class="chart" id="chart-b" role="img"></div><ul class="legend" id="leg-b"></ul></div>
+    <p class="note" id="note-b"></p>
+    <div class="tscroll"><table id="tab-b"></table></div>
+  </section>
+
+  <footer>
+    <span data-l="it">Dati del compito 6 del corso principale (indicatore ⑥ e copertura del suolo), generati da <code>fase6_catalogo_extra.py</code>. Nessuna chiave API in questa pagina. Repository: </span>
+    <span data-l="ko">본 과정 6주차 과제 데이터(지표 ⑥, 토지피복), <code>fase6_catalogo_extra.py</code>로 생성. 이 페이지에는 API 키가 없습니다. 저장소: </span>
+    <a href="https://github.com/elisacantalini/luogo-smartcity">github.com/elisacantalini/luogo-smartcity</a>
+  </footer>
+</div>
+
+<script>
+(function () {
+  var T = {
+    it: { loc: 'it-IT', err: 'Catalogo non caricato: aprire la pagina da un server (non con doppio clic).',
+      yAxis: 'Superficie idonea (ha)', xAxis: 'Soglia di pendenza', slope: 'Pendenza', base: 'scenario base', cols: ['Riga', 'Voce', 'Valore', 'Unità', 'Fonte', 'Consultata'],
+      noteA: function (r) { return 'Fonte: ' + r.source + ' · consultata il ' + r.queried_on + ' · righe ind6-10, ind6-15, ind6-25 di ' + fonte('it') + '. Arancione = scenario base.'; },
+      noteB: function (r) { return 'Fonte: ' + r.source + ' · consultata il ' + r.queried_on + ' · righe lc-* di ' + fonte('it') + '. Arancione = bosco, la voce che separa le alternative del compito.'; },
+      tot: 'totale', hlTag: 'evidenziato', cells: 'celle', ofArea: 'dell\'area' },
+    ko: { loc: 'ko-KR', err: '카탈로그를 불러오지 못했습니다. 서버에서 페이지를 여세요(더블클릭 불가).',
+      yAxis: '적합 면적 (ha)', xAxis: '경사 기준', slope: '경사', base: '기본 시나리오', cols: ['행', '항목', '값', '단위', '출처', '조회일'],
+      noteA: function (r) { return '출처: ' + r.source + ' · 조회일 ' + r.queried_on + ' · ' + fonte('ko') + '의 ind6-10, ind6-15, ind6-25 행. 주황 = 기본 시나리오.'; },
+      noteB: function (r) { return '출처: ' + r.source + ' · 조회일 ' + r.queried_on + ' · ' + fonte('ko') + '의 lc-* 행. 주황 = 산림(과제의 대안을 가르는 항목).'; },
+      tot: '합계', hlTag: '강조', cells: '셀', ofArea: '' }
+  };
+  var rows = null;
+  function fonte(l) { return window.LUOGO_FONTE === 'supabase' ? (l === 'ko' ? 'Supabase catalog 표' : 'tabella Supabase «catalog»') : 'catalogo.json'; }
+  function lang() { return document.documentElement.getAttribute('data-lang') === 'ko' ? 'ko' : 'it'; }
+  function css(v) { return getComputedStyle(document.documentElement).getPropertyValue(v).trim(); }
+  function fmt(x, d) { return new Intl.NumberFormat(T[lang()].loc, { minimumFractionDigits: d, maximumFractionDigits: d }).format(x); }
+  function el(tag, attrs, text) {
+    var n = document.createElementNS('http://www.w3.org/2000/svg', tag);
+    for (var k in attrs) n.setAttribute(k, attrs[k]);
+    if (text != null) n.textContent = text;
+    return n;
+  }
+  function esc(s) { return String(s).replace(/[&<>"]/g, function (c) { return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]; }); }
+  function table(id, list, digits) {
+    var L = T[lang()], h = '<thead><tr>' + L.cols.map(function (c, i) { return '<th' + (i === 4 ? ' class="col-src"' : i === 5 ? ' class="col-date"' : '') + '>' + c + '</th>'; }).join('') + '</tr></thead><tbody>';
+    list.forEach(function (r) {
+      h += '<tr><td class="m">' + esc(r.id) + '</td><td>' + esc(r['item_' + lang()]) + '</td><td class="n">' + fmt(r.value, digits) + '</td><td>' + esc(r.unit) +
+           '</td><td class="col-src">' + esc(r.source) + '</td><td class="m col-date">' + esc(r.queried_on) + '</td></tr>';
+    });
+    document.getElementById(id).innerHTML = h + '</tbody>';
+  }
+
+  function drawBars() {
+    var L = T[lang()], box = document.getElementById('chart-a'), list = rows.filter(function (r) { return r.chart === 'confronto'; });
+    var W = Math.max(300, box.clientWidth), H = W < 460 ? 290 : 320, m = { l: 52, r: 10, t: 34, b: W < 460 ? 60 : 44 };
+    var iw = W - m.l - m.r, ih = H - m.t - m.b, ymax = 100, step = 20;      // asse verticale da 0, tacche regolari
+    var svg = el('svg', { viewBox: '0 0 ' + W + ' ' + H, width: W, height: H });
+    for (var v = 0; v <= ymax; v += step) {
+      var y = m.t + ih - v / ymax * ih;
+      svg.appendChild(el('line', { x1: m.l, x2: W - m.r, y1: y, y2: y, class: v === 0 ? 'axis' : 'grid', 'stroke-width': 1 }));
+      svg.appendChild(el('text', { x: m.l - 8, y: y + 4, 'text-anchor': 'end', 'font-size': 12 }, fmt(v, 0)));
+    }
+    var yl = el('text', { x: 14, y: m.t + ih / 2, 'text-anchor': 'middle', 'font-size': 12, transform: 'rotate(-90 14 ' + (m.t + ih / 2) + ')' }, L.yAxis);
+    svg.appendChild(yl);
+    var bw = iw / list.length, w = Math.min(96, bw * 0.56), narrow = bw < 110;
+    if (narrow) svg.appendChild(el('text', { x: m.l + iw / 2, y: H - 4, 'text-anchor': 'middle', 'font-size': 12 }, L.xAxis));
+    list.forEach(function (r, i) {
+      var x = m.l + bw * i + (bw - w) / 2, h = r.value / ymax * ih, y = m.t + ih - h;
+      svg.appendChild(el('rect', { x: x, y: y, width: w, height: h, rx: 3, fill: r.highlight ? css('--hl') : css('--bar') }));
+      svg.appendChild(el('text', { x: x + w / 2, y: y - 18, 'text-anchor': 'middle', 'font-size': 13, class: 'val' }, fmt(r.value, 1) + ' ha'));
+      svg.appendChild(el('text', { x: x + w / 2, y: y - 4, 'text-anchor': 'middle', 'font-size': 11.5 }, '(' + fmt(r.share_pct, 1) + ' %)'));
+      var t = r.id.split('-')[1];
+      svg.appendChild(el('text', { x: x + w / 2, y: m.t + ih + 18, 'text-anchor': 'middle', 'font-size': 12.5 }, (narrow ? '' : L.slope + ' ') + t + ' %'));
+      if (r.highlight) svg.appendChild(el('text', { x: x + w / 2, y: m.t + ih + 34, 'text-anchor': 'middle', 'font-size': 11.5, fill: css('--hl') }, L.base));
+    });
+    box.innerHTML = ''; box.appendChild(svg);
+    box.setAttribute('aria-label', list.map(function (r) { return r['item_' + lang()] + ': ' + fmt(r.value, 1) + ' ha'; }).join('; '));
+    document.getElementById('note-a').textContent = L.noteA(list[0]);
+    table('tab-a', list, 2);
+  }
+
+  function drawDonut() {
+    var L = T[lang()], box = document.getElementById('chart-b'), list = rows.filter(function (r) { return r.chart === 'composizione'; });
+    var tot = list.reduce(function (s, r) { return s + r.value; }, 0);
+    var S = Math.min(280, Math.max(220, box.clientWidth)), c = S / 2, R = S / 2 - 6, r0 = R * 0.6;
+    var cols = [css('--bar'), css('--hl'), css('--bar-2'), css('--bar-3')];
+    var svg = el('svg', { viewBox: '0 0 ' + S + ' ' + S, width: S, height: S }), a0 = -Math.PI / 2;
+    list.forEach(function (r, i) {
+      var a1 = a0 + r.value / tot * Math.PI * 2, big = a1 - a0 > Math.PI ? 1 : 0;
+      var p = function (rad, a) { return (c + rad * Math.cos(a)).toFixed(2) + ' ' + (c + rad * Math.sin(a)).toFixed(2); };
+      var d = 'M' + p(R, a0) + ' A' + R + ' ' + R + ' 0 ' + big + ' 1 ' + p(R, a1) + ' L' + p(r0, a1) + ' A' + r0 + ' ' + r0 + ' 0 ' + big + ' 0 ' + p(r0, a0) + ' Z';
+      svg.appendChild(el('path', { d: d, fill: r.highlight ? css('--hl') : cols[i], stroke: css('--surface'), 'stroke-width': 2 }));
+      r._col = r.highlight ? css('--hl') : cols[i];
+      a0 = a1;
+    });
+    svg.appendChild(el('text', { x: c, y: c - 4, 'text-anchor': 'middle', 'font-size': 20, class: 'val' }, fmt(tot, 1) + ' ha'));
+    svg.appendChild(el('text', { x: c, y: c + 16, 'text-anchor': 'middle', 'font-size': 12 }, L.tot + ' = 100 %'));
+    box.innerHTML = ''; box.appendChild(svg);
+    box.setAttribute('aria-label', list.map(function (r) { return r['item_' + lang()] + ' ' + fmt(r.value / tot * 100, 1) + ' %'; }).join('; '));
+    document.getElementById('leg-b').innerHTML = list.map(function (r) {
+      return '<li><span class="sw" style="background:' + r._col + '"></span><span>' + esc(r['item_' + lang()]) + (r.highlight ? ' <span class="hl-tag">· ' + L.hlTag + '</span>' : '') +
+             '<br><span class="note" style="margin:0">' + r.cells + ' ' + L.cells + ' · ' + fmt(r.value, 1) + ' ha</span></span><span class="num">' + fmt(r.value / tot * 100, 1) + ' %</span></li>';
+    }).join('');
+    document.getElementById('note-b').textContent = L.noteB(list[0]);
+    table('tab-b', list, 2);
+  }
+
+  function draw() { if (rows) { drawBars(); drawDonut(); } }
+  document.querySelectorAll('.lang-switch button').forEach(function (b) {
+    b.setAttribute('aria-pressed', String(b.dataset.set === lang()));
+    b.addEventListener('click', function () {
+      document.documentElement.setAttribute('data-lang', b.dataset.set); document.documentElement.lang = b.dataset.set;
+      try { localStorage.setItem('luogo-lang', b.dataset.set); } catch (e) {}
+      document.querySelectorAll('.lang-switch button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      draw();
+    });
+  });
+  var tmr; window.addEventListener('resize', function () { clearTimeout(tmr); tmr = setTimeout(draw, 120); });
+  if (window.matchMedia) window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', draw);
+  // Righe del catalogo: prima la tabella Supabase «catalog» (progetto ccs 6, chiave publishable in ../config.js),
+  // se non risponde la copia catalogo.json nel repository. value arriva da numeric → si converte in numero.
+  var ORDINE = ['ind6-10', 'ind6-15', 'ind6-25', 'lc-edificato', 'lc-bosco', 'lc-acqua', 'lc-prati'];
+  function pulisci(list) {
+    return list.map(function (r) { r.value = Number(r.value); if (r.share_pct != null) r.share_pct = Number(r.share_pct); return r; })
+      .filter(function (r) { return r.is_latest && isFinite(r.value); })
+      .sort(function (a, b) { return ORDINE.indexOf(a.id) - ORDINE.indexOf(b.id); });
+  }
+  function daSupabase() {
+    return import('../config.js').then(function (c) {
+      return fetch(c.SUPABASE_URL + '/rest/v1/catalog?select=*&is_latest=eq.true', { cache: 'no-store', headers: { apikey: c.SUPABASE_PUBLISHABLE_KEY } });
+    }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (list) { if (!list.length) throw new Error('vuota'); window.LUOGO_FONTE = 'supabase'; return list; });
+  }
+  function daFile() {
+    return fetch('catalogo.json', { cache: 'no-store' }).then(function (r) { if (!r.ok) throw new Error(r.status); return r.json(); })
+      .then(function (j) { window.LUOGO_FONTE = 'catalogo.json'; return j.righe; });
+  }
+  daSupabase().catch(function (e) { console.warn('Supabase non disponibile, uso catalogo.json:', e); return daFile(); })
+    .then(function (list) { rows = pulisci(list); draw(); })
+    .catch(function () { ['chart-a', 'chart-b'].forEach(function (id) { document.getElementById(id).innerHTML = '<p class="err">' + T[lang()].err + '</p>'; }); });
+})();
+</script>
+</body>
+</html>
